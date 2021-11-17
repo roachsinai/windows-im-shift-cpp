@@ -1,4 +1,5 @@
 // https://stackoverflow.com/a/68483943/6074780
+// https://stackoverflow.com/a/22419083/6074780
 #define WIN32_LEAN_AND_MEAN
 #define VC_EXTRALEAN
 #include <iostream>
@@ -6,7 +7,7 @@
 #include <Windows.h>
 
 
-int* screenshot(int& width, int& height) {
+int* screen_shot(int& width, int& height) {
     HDC hdc = GetDC(NULL); // get the desktop device context
     HDC cdc = CreateCompatibleDC(hdc); // create a device context to use yourself
     height = (int)GetSystemMetrics(SM_CYVIRTUALSCREEN); // get the width and height of the screen
@@ -31,6 +32,26 @@ int* screenshot(int& width, int& height) {
 }
 
 
+void send_shift()
+{
+    INPUT ip;
+
+    ip.type = INPUT_KEYBOARD;
+    ip.ki.wScan = 0; // hardware scan code for key
+    ip.ki.time = 0;
+    ip.ki.dwExtraInfo = 0;
+
+    // Press the "shift" key
+    ip.ki.wVk = 0x10; // virtual-key code for the "shift" key
+    ip.ki.dwFlags = 0; // 0 for key press
+    SendInput(1, &ip, sizeof(INPUT));
+
+    // Release the "shift" key
+    ip.ki.dwFlags = KEYEVENTF_KEYUP; // KEYEVENTF_KEYUP for key release
+    SendInput(1, &ip, sizeof(INPUT));
+}
+
+
 int main(int argc, char* argv[])
 {
     if (argc != 5 && argc != 6)
@@ -39,19 +60,7 @@ int main(int argc, char* argv[])
         return -1;
     }
     int width=0, height=0;
-    int* image = screenshot(width, height);
-
-    // access pixel colors for position (x|y)
-    // const int x=0, y=0;
-    // const int color = image[x+y*width];
-    // const int red   = (color>>16)&255;
-    // const int green = (color>> 8)&255;
-    // const int blue  =  color     &255;
-
-    // int startx = 1715;
-    // int starty = 1047;
-    // int endx = 1734;
-    // int endy = 1065;
+    int* image = screen_shot(width, height);
 
     int startx = std::stoi(argv[1]);
     int starty = std::stoi(argv[2]);
@@ -72,7 +81,10 @@ int main(int argc, char* argv[])
     if (argc == 5)
         std::cout << count << std::endl;
     else if (count == std::stoi(argv[5]))
+    {
+        send_shift();
         std::cout << 2 << std::endl;
+    }
     else
         std::cout << 1 << std::endl;
 
