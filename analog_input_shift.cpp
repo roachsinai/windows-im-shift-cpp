@@ -1,5 +1,4 @@
 // https://stackoverflow.com/a/22419083/6074780
-#include <iostream>
 #include <windows.h>
 
 int main()
@@ -25,8 +24,6 @@ int main()
     // Release the "shift" key
     ip.ki.dwFlags = KEYEVENTF_KEYUP; // KEYEVENTF_KEYUP for key release
     SendInput(1, &ip, sizeof(INPUT));
-
-    std::cout << "Shift key sended." << std::endl;
 
     // Exit normally
     return 0;
