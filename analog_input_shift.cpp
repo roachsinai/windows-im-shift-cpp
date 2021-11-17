@@ -1,14 +1,19 @@
 // https://stackoverflow.com/a/22419083/6074780
+#include <iostream>
 #include <windows.h>
 
-int main()
+int main(int argc, char* argv[])
 {
+    if (argc != 2)
+        return -1;
+
     // This structure will be used to create the keyboard
     // input event.
     INPUT ip;
 
-    // Pause for 5 seconds.
-    // Sleep(5000);
+    // SendInput must delay enough milliseconds to let Vim responsed over.
+    int msec = std::stoi(argv[1]);
+    Sleep(msec);
 
     // Set up a generic keyboard event.
     ip.type = INPUT_KEYBOARD;
